@@ -88,8 +88,14 @@ OPTIONS
     commands that would be executed.
 
 --exclude <filter>::
-    Exclude configured sections matching '<filter>'. See
-    <<_filter_statements,FILTER STATEMENTS>> below.
+    Exclude configured sections matching '<filter>' (see
+    <<_filter_statements,FILTER STATEMENTS>> below), or any specific
+    snapshot from being backuped or deleted, or any specific backup
+    from being deleted.
++
+Note that excluding specific snapshots from being backuped has impact
+on scheduling, e.g. the second snapshot of the day is regarded as
+first backup of the day if the first backup is excluded.
 
 -p, --preserve::
     Preserve all snapshots and backups. Skips deletion of any
