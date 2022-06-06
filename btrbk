@@ -7050,7 +7050,14 @@ MAIN:
             }
 
             if(@subvol_out) {
-              push @out, "$svol->{PRINT}", @subvol_out, "";
+              if($action_archive) {
+                my $snaproot = vinfo_snapshot_root($svol);
+                my $snapshot_basename = config_key($svol, "snapshot_name");
+                push @out, "$snaproot->{PRINT}/${snapshot_basename}.*";
+              } else {
+                push @out, "$svol->{PRINT}";
+              }
+              push @out, @subvol_out, "";
             }
           }
         }
@@ -7061,7 +7068,7 @@ MAIN:
         push @cmdline_options, "$preserve_snapshots: Preserved all snapshots" if($preserve_snapshots);
         push @cmdline_options, "$preserve_backups: Preserved all backups" if($preserve_backups);
 
-        print_header(title => "Backup Summary",
+        print_header(title => $action_archive ? "Archive Summary" : "Backup Summary",
                      config => $config,
                      time => $start_time,
                      options => \@cmdline_options,
