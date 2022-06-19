@@ -6821,7 +6821,8 @@ MAIN:
 
                 results  => $schedule_results_mixed,
                 result_hints => { topic => "backup", root_path => $snaproot->{PATH} },
-                result_delete_action_text => 'REMOVE_FROM_OUTPUT',
+                result_preserve_action_text => 'create',
+                result_delete_action_text   => 'REMOVE_FROM_OUTPUT',
                );
               my @resume = grep defined, @$preserve;   # remove entries with no value from list (target subvolumes)
               $resume_total = scalar @resume;
@@ -6999,7 +7000,8 @@ MAIN:
       if($print_schedule && $schedule_results) {
         foreach my $topic (qw(snapshot backup)) {
           my @data = map +{ %$_, vinfo_prefixed_keys("", $_->{value}) },
-                     grep { !($_->{action} && $_->{action} eq "REMOVE_FROM_OUTPUT") }
+                     grep { $_->{action} = "create" if($_->{value}{node}{INJECTED});
+                            !($_->{action} && $_->{action} eq "REMOVE_FROM_OUTPUT") }
                      grep { $_->{topic} eq $topic } @$schedule_results;
           next unless(@data);
           print_formatted("schedule", \@data, title => (uc($topic) . " SCHEDULE"), paragraph => 1);
