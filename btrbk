@@ -3522,6 +3522,7 @@ sub get_receive_targets($$;@)
       TRACE "get_receive_targets: skip unexpected match: " . _fs_path($_) if($do_trace);
       push @unexpected, { src_vol => $src_vol, target_node => $_ };
       if($opts{warn} && config_key($droot, "warn_unknown_targets")) {
+        # TODO: fix text: unexpected location (?); add hints here?
         WARN "Receive target of \"$src_vol->{PRINT}\" exists at unknown location: " . ($vinfo ? $vinfo->{PRINT} : _fs_path($_));
       }
       next;
@@ -6792,6 +6793,7 @@ MAIN:
 
             if(scalar @$unexpected_only && ((config_key($droot, "incremental") // "") eq "strict")) {
               # If target exists at unexpected location ONLY, we can't send/receive it.
+              # TODO: fix text, add hint about incremental=yes
               ABORTED($droot, "Receive targets of backup candidates exist at unexpected location only");
               WARN "Skipping backup of \"$sroot->{PRINT}/${snapshot_basename}.*\": " . ABORTED_TEXT($droot),
                 "Please check your target configuration, or fix manually by running" . ($droot->{URL_PREFIX} ? " (on $droot->{URL_PREFIX}):" : ":"),
